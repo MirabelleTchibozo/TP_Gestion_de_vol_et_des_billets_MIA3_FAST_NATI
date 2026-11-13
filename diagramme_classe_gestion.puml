@@ -1,0 +1,65 @@
+classDiagram
+    direction TB
+
+    class Passager {
+        -int id
+        -string nom
+        -string prenom
+        -string email
+        -string numeroPasseport
+        +enregistrer() void
+        +consulterReservations() List~Reservation~
+    }
+
+    class Vol {
+        -int id
+        -string numeroVol
+        -string origine
+        -string destination
+        -datetime dateDepart
+        -int capaciteTotale
+        -float prixBillet
+        +calculerPlacesConfirmees() int
+        +calculerPlacesDisponibles() int
+        +verifierDisponibilite() bool
+    }
+
+    class Reservation {
+        -int id
+        -datetime dateReservation
+        -StatutReservation statut
+        -StatutRemboursement statutRemboursement
+        +creer() void
+        +valider() void
+        +annuler() void
+        +evaluerRemboursement() StatutRemboursement
+    }
+
+    class Paiement {
+        -int id
+        -float montant
+        -datetime datePaiement
+        -string methode
+        +effectuerPaiement() bool
+    }
+
+    class StatutReservation {
+        <<enumeration>>
+        EN_ATTENTE
+        CONFIRMEE
+        ANNULEE
+    }
+
+    class StatutRemboursement {
+        <<enumeration>>
+        NON_APPLICABLE
+        REMBOURSE_INTEGRAL
+        REMBOURSE_PARTIEL
+    }
+
+    %% Relations et Cardinalités
+    Passager "1" --> "0..*" Reservation : effectue >
+    Vol "1" --> "0..*" Reservation : concerne >
+    Reservation "1" -- "0..1" Paiement : est réglée par >
+    Reservation --> StatutReservation : possède >
+    Reservation --> StatutRemboursement : suit >
